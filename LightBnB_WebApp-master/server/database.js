@@ -102,6 +102,33 @@ const getAllReservations = function (guest_id, limit = 10) {
 };
 exports.getAllReservations = getAllReservations;
 
+// -------------------------------------------------- BOOK RESERVATIONS
+const addReservation = function (reservationDetails) {
+  let queryParams = [];
+  for (let key in reservationDetails) {
+    queryParams.push(reservationDetails[key]);
+  }
+  return pool.query(`
+    INSERT INTO reservations (property_id,start_date, end_date,guest_id)
+    VALUES($1,$2,$3,$4)
+    RETURNING *;
+  `, queryParams)
+    .then((res) => {
+      return res.rows[0];
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+exports.addReservation = addReservation;
+
+// CREATE TABLE reservations (
+//   id SERIAL PRIMARY KEY NOT NULL,
+//   start_date DATE NOT NULL,
+//   end_date DATE NOT NULL,
+//   property_id INTEGER REFERENCES properties(id) ON DELETE CASCADE,
+//   guest_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+
 /// Properties
 
 /**
@@ -114,7 +141,7 @@ const getAllProperties = function (options, limit = 10) {
   let queryParameters = [];
 
   let queryString = `
-  SELECT properties.*, AVG(property_reviews.rating) AS average_reviews FROM properties
+  SELECT properties.*, AVG(property_reviews.rating) AS average_rating FROM properties
   JOIN property_reviews ON property_id = properties.id
   WHERE 1=1
   `;
@@ -208,6 +235,8 @@ const addProperty = function (property) {
     });
 
 };
+
+
 exports.addProperty = addProperty;
 
 

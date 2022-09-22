@@ -26,5 +26,4 @@ $(() => {
     }
   }
   window.propertyListings.addProperties = addProperties;
-
 });
