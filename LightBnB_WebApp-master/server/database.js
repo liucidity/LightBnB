@@ -142,31 +142,12 @@ const getAllProperties = function (options, limit = 10) {
 
 
 
-  console.log(queryString, queryParameters);
+  // console.log(queryString, queryParameters);
   return pool.query(`
   ${queryString}
   ORDER BY properties.id
   LIMIT ${limit};
   `, queryParameters).then((res) => res.rows);
-
-
-  // {
-  //   city,
-  //   owner_id,
-  //   minimum_price_per_night,
-  //   maximum_price_per_night,
-  //   minimum_rating;
-  // }
-
-  return pool.query(`
-  SELECT * FROM properties LIMIT $1;
-  `, [limit])
-    .then((result) => {
-      return result.rows;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
 };
 exports.getAllProperties = getAllProperties;
 
